@@ -58,7 +58,60 @@
 </body>
 
 <script>
+// initial mouse position and initial drawId variable
+    let mousePosition = {x: 0, y: 0};
+    let drawId;
 
+// randomizer used to create different colors, random positions, and size of dots: used elsewhere
+    function getRandomNumber(min, max) {
+        return Math.round(Math.random() * (max - min + 1)) + min;
+    };
+
+// gets the position of the mouse as it moves across the window
+    window.addEventListener('mousemove', function(event){
+        mousePosition.x = event.x;
+        mousePosition.y = event.y;
+    })
+
+
+// draw function that draws the dots
+    function draw(){ 
+        return setInterval(function(){
+        let container = document.getElementById('wrap');
+
+        const color = `background:rgb(${getRandomNumber(
+            0,
+            255
+        )},${getRandomNumber(0, 255)}, ${getRandomNumber(0, 255)});`;
+        const ballSize = getRandomNumber(10, 30);
+        const size = `height:${ballSize}px; width:${ballSize}px;`;
+        const left = `left:${getRandomNumber(
+            mousePosition.x - ballSize,
+            mousePosition.x
+        )}px;`;
+        const top = `top:${getRandomNumber(
+            mousePosition.y - ballSize,
+            mousePosition.y
+        )}px; `;
+        const style = `${left}${top}${color}${size}`;
+// creates ball variable, adds ball class, adds the ball styling, and removes the ball after animation is done, after a certain amount of ms.
+        let ball = document.createElement('div')
+        ball.classList.add('ball')
+        ball.style = style;
+        ball.addEventListener("animationend", function(event){
+            event.target.remove();
+        });
+        container.appendChild(ball);
+    }, 10);
+    }
+// cb to invoke draw() function and assigns it to the drawId variable.
+    document.addEventListener('mouseover', function(){
+        drawId = draw();
+    });
+// cb that uses the updated drawId var to stop the interval.
+    document.addEventListener('mouseout', function(){
+        clearInterval(drawId)
+    })
 </script>
 
 </html>
